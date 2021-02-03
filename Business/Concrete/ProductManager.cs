@@ -22,5 +22,15 @@ namespace Business.Concrete
             //IProductDal ProductDal = new IProductDal(); //bir iş sınıfı başka sınıfı new'lemez çünkü memor^y'de çalışıyor demektir bu da veritabanı veya kaybetmemek istediğimiz veriler için iyi değildir.
             return _productDal.GetAll();
         }
+
+        public List<Product> GetAllByCategoryId(int id)
+        {
+            return _productDal.GetAll(p => p.CategoryId == id);
+        }
+
+        public List<Product> GetByUnitPrice(decimal min, decimal max)
+        {
+            return _productDal.GetAll(p => p.UnitPrice >= min && p.UnitPrice <= max);
+        }
     }
 }
