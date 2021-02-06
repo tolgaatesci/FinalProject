@@ -1,4 +1,6 @@
-﻿using Entities.Concrete;
+﻿using Core.DataAccess;
+using Entities.Concrete;
+using Entities.DTOs;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -15,5 +17,8 @@ namespace DataAccess.Abstract
         //List<Product> GetAllByCategory(int categoryId); //ürünleri kategoriye göre filtrele
 
         //IEntityRepository generic yapısını kullandığımız için bunları iptal edebildik.
+
+        //Code refactoring
+        List<ProductDetailDto> GetProductDetails();
     }
 }

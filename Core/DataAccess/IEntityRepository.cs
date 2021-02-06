@@ -1,13 +1,14 @@
-﻿using Entities.Abstract;
+﻿using Core.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Text;
 
-namespace DataAccess.Abstract
+namespace Core.DataAccess
 {
+    //Core katmanı diğer katmanları referans almaz
     //kuralları oluştururken T yerine her şey yazılamasın isteriz, yani T yi sınırlandırmak isteriz buna generic constraint denir
-    public interface IEntityRepository<T> where T:class, IEntity, new()
+    public interface IEntityRepository<T> where T:class, IEntity, new() //ICategoryDal, ICustomerDal, IProductDal interface'leri kapsıyor gibi düşünebiliriz
         //T:class dediğimizde T olanın, referans tipi olması gerektiğini söyleriz class olma zorunluluğu değil yani
         //T:IEntity dediğimzde T, IEntity olabilir ya da IEntity implemente eden bir nesne olabilir
         //T:new() dediğimizde IEntity new'lenebilmediği için onu kullanamayız yani T soyut nesne olamaz, somut bir nesne olabilmeli ve IEntity implemente eden(customer, product, category) olabilmeli
