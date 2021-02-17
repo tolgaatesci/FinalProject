@@ -1,10 +1,14 @@
 ﻿using Business.Abstract;
 using Business.Constants;
+using Business.ValidationRules.FluentValidation;
+using Core.Aspects.Autofac.Validation;
+using Core.CrossCuttingConcerns.Validation;
 using Core.Utilities.Results;
 using DataAccess.Abstract;
 using DataAccess.Concrete.InMemory;
 using Entities.Concrete;
 using Entities.DTOs;
+using FluentValidation;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -55,14 +59,50 @@ namespace Business.Concrete
             return new SuccessDataResult<List<ProductDetailDto>>(_productDal.GetProductDetails());
         }
 
-        IResult IProductService.Add(Product product)
+        [ValidationAspect(typeof(ProductValidator))] //add metodunu doğrula ProductValidator kullanarak
+        public IResult Add(Product product) //add metodunu doğrula ProductValidator kullanarak
         {
-            if (product.ProductName.Length < 2)
-            {
-                return new ErrorResult("Ürün ismi en az 2 karakter olmalıdır."); //magic strings yani standart olmayan string mesajlar
-            }
+            //business codes (iş kuralları) ayrı validation (doğrulama) ayrı kullanılır
+            //validation, girilen veya bir yerden çekilen verinin yapısal uyumu ile alakalı olan her şeye doğrulama deniyor
+            //business codes,iş gereksinimlerimize, iş ihtiyaçlarımıza uygunluğunu ile olan her şeye deniyor.
+            //Aşağıdaki kodlar validation'a girer. if'li 2 yapı ancak biz daha profesyonel olarak validationTool yapısını kurduk
+            //kurduğumuz validationTool'u Add fonksiyonu gibi iş kodlarının olduğu yere koymak yerine attribute ile kullanacağız
+            //add'i çağırdığımızda belli kurala uyan attribute var ise add'den önce onları çalıştırarak sonra add metoduna geçer
+
+            //if (product.UnitPrice <= 0)
+            //{
+            //    return new ErrorResult(Messages.UnitPriceInvalid);
+            //}
+            //if (product.ProductName.Length < 2)
+            //{
+            //    return new ErrorResult("Ürün ismi en az 2 karakter olmalıdır."); //magic strings yani standart olmayan string mesajlar
+            //}
+
+
+            //ValidationTool.Validate(new ProductValidator(), product); //[ValidationAspect(typeof(ProductValidator))] olduğundan bu satıra gerek kalmadı. 
+
+            //loglama
+            //cacheremove
+            //perfonmance
+            //transaction
+            //yetkilendirme
+
             _productDal.Add(product);
             return new SuccessResult(Messages.ProductAdded); //bu şekilde düzenledik magic strings'dense
+
+            //var carRentalStatus = _productDal.Get(r => r.UnitsInStock == product.UnitsInStock);
+            //if (carRentalStatus.CategoryId == 4)
+            //{
+            //    return new ErrorResult(Messages.ProductNotAdded);
+            //}
+            //_productDal.Add(product);
+            //return new SuccessResult(Messages.ProductAdded);
+        }
+
+        public IResult Delete(Product product)
+        {
+            _productDal.Delete(product);
+            return new SuccessResult("Silindi");
         }
     }
 }
